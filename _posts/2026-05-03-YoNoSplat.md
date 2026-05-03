@@ -43,6 +43,7 @@ YoNoSplat reconstructs 3D Gaussian splats directly from unposed and uncalibrated
 
 ---
 
+
 ## 2. 🔁 Model Input & Output
 
 | 구분 | 내용 | 형태(shape / format) |
@@ -51,6 +52,7 @@ YoNoSplat reconstructs 3D Gaussian splats directly from unposed and uncalibrated
 | **Output** | 각 입력 뷰에 대한 Local 3D Gaussian 파라미터(center, opacity, rotation, scale, color), Camera Poses, Camera Intrinsics | `$\{ \cup (\mu_j^v, \alpha_j^v, r_j^v, s_j^v, c_j^v), k^v, p^v \}_{j=1,\dots,H\times W}^{v=1,\dots,V}$` |
 | **Task 유형** | Feedforward 3D Reconstruction, Novel View Synthesis, Camera Pose Estimation | Feedforward Network Inference |
 | **Supervision** | Supervised (Ground-truth pose, intrinsic, target views rendering loss 활용) | |
+
 
 ---
 
@@ -67,6 +69,7 @@ YoNoSplat은 입력 이미지를 DINOv2 기반의 인코더로 특징을 추출�
 | ③ | **Local-Global Attention Decoder** | Intrinsic-Conditioned Features | Multi-view Fused Features $\mathbf{F}_{\text{fused}}$ |
 | ④ | **Gaussian Heads** | Upsampled Fused Features, Input Image Skip Connection | Local Gaussian Parameters $(\mu, \alpha, r, s, c)$ |
 | ⑤ | **Pose Head & Global Aggregation** | Multi-view Fused Features | Predicted Poses $p^v$, Global 3D Gaussians |
+
 
 ---
 
@@ -90,6 +93,7 @@ $$
 **Output:**  
 Image Feature Tokens, Predicted Intrinsics $k^v$
 
+
 ---
 
 #### Step ② — Intrinsic Condition Embedding (ICE)
@@ -110,6 +114,7 @@ $$
 **Output:**  
 $\mathbf{F}_{\text{conditioned}}^v$
 
+
 ---
 
 #### Step ③ — Local-Global Attention Decoder
@@ -128,6 +133,7 @@ $$
 
 **Output:**  
 $\mathbf{F}_{\text{fused}}$ (Multi-view fused features)
+
 
 ---
 
@@ -149,6 +155,7 @@ $$
 
 **Output:**  
 Local Gaussians, $p^v$ (Camera Poses)
+
 
 ---
 
@@ -182,6 +189,7 @@ $$
 - 이 수식이 해결하는 문제: SfM 데이터셋의 scale 모호성(scale ambiguity)을 제거한다.
 - 기존 방법과의 차이: Ground-truth depth를 기반으로 정규화하는 기존 방법들과 달리 카메라 거리만을 사용하여 정규화를 수행하며, relative pose loss와 완벽히 호환된다.
 
+
 ---
 
 ### 3-4. Loss Function & Training Strategy
@@ -200,6 +208,7 @@ $$
 - 학습 스케줄 / optimizer: AdamW 옵티마이저 사용, Backbone LR `$2\times10^{-5}$`, 나머지 `$2\times10^{-4}$`.
 - 하이퍼파라미터 세팅: `$\lambda_{\text{intrin}} = 0.5$`, `$\lambda_{\text{pose}} = 0.1$`, `$\lambda_{\text{opacity}} = 0.01$`. Gaussian pruning 임계값 `$o_i < 0.005$`.
 
+
 ---
 
 ### 3-5. Architecture Highlights
@@ -210,6 +219,7 @@ $$
   2. Intrinsic Condition Embedding (ICE) 모듈을 통한 캘리브레이션 불필요 기능.
   3. Mix-forcing 훈련 스케줄.
 - **Inference 시 특이사항:** Pose-free, Intrinsic-free 조건에서도 feedforward 추론이 가능하며, 선택적으로 200 iteration의 빠른 post-optimization을 적용하여 성능을 더욱 끌어올릴 수 있다.
+
 
 ---
 
@@ -258,6 +268,7 @@ $$
 | **Max pairwise distance 정규화** | 정규화 미적용 시 PSNR이 22.662로 폭락 (Max-pairwise 적용 시 25.212) | 상대적 포즈 손실함수와 일치하는 가장 안정적인 스케일 정규화 방식임 |
 | **ICE 모듈 (Intrinsic)** | Intrinsic 미사용 시 PSNR 24.481로 하락 (예측 Intrinsic 사용 시 24.711) | Scale ambiguity를 줄이는 데 ICE 모듈이 결정적인 역할을 함 |
 
+
 ---
 
 ## 5. 💡 Contributions
@@ -270,6 +281,7 @@ $$
 - **리뷰어 관점에서 가장 실질적인 contribution:**
   입력 데이터의 제약(Pose 유무, Camera 캘리브레이션 유무, 이미지 장수)을 하나의 파이프라인 안에서 모두 유연하게 소화할 수 있도록 설계한 'Local 예측 + Global 통합(Mix-forcing)' 디자인 초이스가 가장 훌륭하며, 실무적인 사용성을 크게 높인 점.
 
+
 ---
 
 ## 6. 🧱 Related Work & Positioning
@@ -278,6 +290,7 @@ $$
 - 이 논문이 속한 연구 계보 (lineage): 단일/소수 뷰 기반의 Feedforward 3D Gaussian Splatting 연구 흐름과 $\pi^3$, VGGT 등으로 대변되는 Feedforward Point Cloud Pose 추정 연구의 교집합.
 - 기존 접근 방식 대비 패러다임 변화 여부: 기존 Pose-free 3DGS 모델들이 Canonical Space에 직접 Gaussian을 투영하여 뷰 수 확장에 실패했던 패러다임에서 벗어나, Local 예측 후 Pose 추정을 거쳐 Global 공간으로 매핑하는 전통적 파이프라인을 딥러닝 기반 Feedforward 학습으로 매끄럽게 통합함.
 
+
 ---
 
 ## 7. ✅ Strengths
@@ -285,6 +298,7 @@ $$
 1. **Extreme Versatility:** Pose, Intrinsic, 이미지 장수에 구애받지 않고 유연하게 작동하는 범용적 프레임워크.
 2. **Innovative Training Strategy:** Mix-forcing이라는 직관적이고 효과적인 커리큘럼 러닝을 도입해 End-to-end Pose-Geometry 동시 학습의 한계를 극복함.
 3. **Superior Performance & Scalability:** 100장이 넘는 뷰(view)에서도 단 몇 초 만에 고품질 3D Reconstruction이 가능하며, 다른 도메인(ScanNet++)에서도 강건한 Zero-shot 일반화 성능을 입증함.
+
 
 ---
 
@@ -296,12 +310,14 @@ $$
   - 실험 설계상 아쉬운 점: DINOv2 Large 모델과 32장의 GH200 GPU를 학습에 동원해야 하는 등 막대한 컴퓨팅 리소스가 필요하여 진입 장벽이 매우 높음.
   - 실용성 문제: 모바일이나 엣지 디바이스에서 실시간 추론(Inference)을 수행하기에는 파라미터와 메모리 소모량이 거대함.
 
+
 ---
 
 ## 9. 🔮 Future Work
 
 - **저자가 제시한 future work:** GPU 메모리 제약을 극복하기 위한 Incremental feedforward reconstruction (순차적 방식의 확장) 연구.
 - **리뷰어가 생각하는 확장 가능성:** 고정된 해상도 연산이나 뷰 제약을 완화할 수 있도록 Linear Attention 기반의 시퀀스 모델(Mamba 등)을 Decoder에 결합하여 극단적으로 많은 뷰를 $O(N)$으로 처리하는 아키텍처 개선.
+
 
 ---
 
@@ -313,3 +329,6 @@ $$
 | **예상 임팩트** | 3D Reconstruction 파이프라인에서 COLMAP과 같은 무거운 SfM 모듈을 완전히 대체할 수 있는 실질적 대안으로 자리매김할 가능성이 큼. |
 | **추천 독자층** | NeRF, 3DGS, SLAM, 대규모 3D Vision 모델 연구자 및 엔지니어 |
 | **개인 평점** | ⭐⭐⭐⭐⭐ / 5 |
+
+
+---

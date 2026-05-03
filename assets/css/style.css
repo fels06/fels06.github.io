@@ -50,7 +50,8 @@ a { text-decoration: none; color: inherit; transition: color 0.2s ease; }
 main { flex: 1; }
 
 .container {
-    max-width: 1100px;
+    max-width: 1800px;
+    width: 96%;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -68,7 +69,8 @@ header {
 }
 
 .header-container {
-    max-width: 1100px;
+    max-width: 1800px;
+    width: 96%;
     margin: 0 auto;
     padding: 15px 20px;
     display: flex;
@@ -93,13 +95,7 @@ nav a:hover { color: var(--text-primary); }
 
 /* Scrolled State for Header */
 body.scrolled .header-container {
-    padding: 5px 20px;
-}
-body.scrolled .logo {
-    font-size: 0.9rem;
-}
-body.scrolled nav a {
-    font-size: 0.8rem;
+    padding: 5px 40px;
 }
 body.scrolled .theme-toggle {
     padding: 4px;
