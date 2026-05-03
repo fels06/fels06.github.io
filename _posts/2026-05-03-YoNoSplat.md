@@ -30,14 +30,14 @@ YoNoSplat reconstructs 3D Gaussian splats directly from unposed and uncalibrated
 
 ## 1. 🔭 Research Direction
 
-- 이 논문이 해결하려는 **핵심 문제(core problem)**는 무엇인가?
+### - 이 논문이 해결하려는 **핵심 문제(core problem)**는 무엇인가?
   - Unstructured 이미지 모음으로부터 빠르고 유연하게 고품질의 3D Gaussian Splatting(3DGS) scene을 reconstruction하는 문제를 해결하고자 한다.
-- 기존 연구(prior work)의 어떤 **한계(limitation)**를 지적하는가?
+### - 기존 연구(prior work)의 어떤 **한계(limitation)**를 지적하는가?
   - 기존의 feedforward 모델들은 정확한 camera pose를 요구하거나, 캘리브레이션된 intrinsics를 필요로 하거나, 고정되고 제한된 개수의 입력 뷰(view)만 처리할 수 있다는 엄격한 제약 조건을 가진다.
   - 최근의 pose-free 방법들은 2~4개의 적은 뷰에서는 잘 동작하지만, unified canonical space로 직접 예측하는 구조 때문에 뷰 수가 많아지면 확장성(scalability)이 떨어져 성능이 하락한다.
-- 이 연구가 속한 **task / domain**은 무엇인가?
+### - 이 연구가 속한 **task / domain**은 무엇인가?
   - 3D Scene Reconstruction 및 Novel View Synthesis (NVS).
-- 연구의 **최종 목표(goal)**와 **동기(motivation)**는?
+### - 연구의 **최종 목표(goal)**와 **동기(motivation)**는?
   - 임의의 개수($V$)의 이미지(posed/unposed, calibrated/uncalibrated)를 입력받아 하나의 모델로 유연하게 3D scene을 재구성하는 범용적인 feedforward 모델을 제안하는 것이다.
   - Pose와 3D geometry의 학습이 심하게 얽혀있는 문제(entanglement)와 scale ambiguity 문제를 해결하여 모델의 안정성과 확장성을 극대화하는 것을 목표로 한다.
 
@@ -47,8 +47,8 @@ YoNoSplat reconstructs 3D Gaussian splats directly from unposed and uncalibrated
 
 | 구분 | 내용 | 형태(shape / format) |
 |------|------|----------------------|
-| **Input** | 임의의 개수($V$)의 Unposed & Uncalibrated 이미지 (선택적으로 ground-truth pose 및 intrinsics 제공 가능) | $\{I^v\}_{v=1}^V, \quad I^v \in \mathbb{R}^{3 \times H \times W}$ |
-| **Output** | 각 입력 뷰에 대한 Local 3D Gaussian 파라미터(center, opacity, rotation, scale, color), Camera Poses, Camera Intrinsics | $\{ \cup (\mu_j^v, \alpha_j^v, r_j^v, s_j^v, c_j^v), k^v, p^v \}_{j=1,\dots,H\times W}^{v=1,\dots,V}$ |
+| **Input** | 임의의 개수(`$V$`)의 Unposed & Uncalibrated 이미지 (선택적으로 ground-truth pose 및 intrinsics 제공 가능) | `$\{I^v\}_{v=1}^V, \quad I^v \in \mathbb{R}^{3 \times H \times W}$` |
+| **Output** | 각 입력 뷰에 대한 Local 3D Gaussian 파라미터(center, opacity, rotation, scale, color), Camera Poses, Camera Intrinsics | `$\{ \cup (\mu_j^v, \alpha_j^v, r_j^v, s_j^v, c_j^v), k^v, p^v \}_{j=1,\dots,H\times W}^{v=1,\dots,V}$` |
 | **Task 유형** | Feedforward 3D Reconstruction, Novel View Synthesis, Camera Pose Estimation | Feedforward Network Inference |
 | **Supervision** | Supervised (Ground-truth pose, intrinsic, target views rendering loss 활용) | |
 
@@ -144,7 +144,7 @@ $$
 f_\theta: \{ I^v \}_{v=1}^V \mapsto \{ \cup (\mu_j^v, \alpha_j^v, r_j^v, s_j^v, c_j^v), k^v, p^v \}_{j=1,\dots,H\times W}^{v=1,\dots,V}
 $$
 
-- 기호 설명: $f_\theta$ = 전체 네트워크, $\mu_j^v, \alpha_j^v, r_j^v, s_j^v, c_j^v$ = 뷰 $v$의 $j$번째 픽셀에 대한 Gaussian 속성(위치, 투명도, 회전, 스케일, 색상), $p^v = [R^v, t^v]$ = 카메라 외부 파라미터.
+- 기호 설명: `$f_\theta$` = 전체 네트워크, `$\mu_j^v, \alpha_j^v, r_j^v, s_j^v, c_j^v$` = 뷰 `$v$`의 `$j$`번째 픽셀에 대한 Gaussian 속성(위치, 투명도, 회전, 스케일, 색상), `$p^v = [R^v, t^v]$` = 카메라 외부 파라미터.
 - 직관적 의미: 네트워크가 픽셀 단위로 로컬 3D Gaussian을 생성하고, 이를 전역 공간으로 배치하기 위한 카메라 포즈를 동시에 산출한다.
 
 **Output:**  
@@ -175,9 +175,9 @@ $$
 
 | 기호 | 의미 | 비고 |
 |------|------|------|
-| $c_i, c_j$ | $i$번째, $j$번째 카메라 중심(center) 위치 | |
-| $s$ | 카메라 중심들 간의 최대 유클리디안 거리 | Scale factor |
-| $\hat{c}_i$ | 정규화된 카메라 중심 | |
+| `$c_i, c_j$` | `$i$`번째, `$j$`번째 카메라 중심(center) 위치 | |
+| `$s$` | 카메라 중심들 간의 최대 유클리디안 거리 | Scale factor |
+| `$\hat{c}_i$` | 정규화된 카메라 중심 | |
 
 - 이 수식이 해결하는 문제: SfM 데이터셋의 scale 모호성(scale ambiguity)을 제거한다.
 - 기존 방법과의 차이: Ground-truth depth를 기반으로 정규화하는 기존 방법들과 달리 카메라 거리만을 사용하여 정규화를 수행하며, relative pose loss와 완벽히 호환된다.
@@ -192,13 +192,13 @@ $$
 
 | Loss 항 | 수식 (또는 구성) | 역할 |
 |---------|------|------|
-| $\mathcal{L}_{\text{image}}$ | $\text{MSE} + \text{LPIPS}$ | 목표 뷰에서의 렌더링 품질을 최적화 (Gaussian 학습) |
-| $\mathcal{L}_{\text{intrin}}$ | $\| \hat{k}^v - k_{\text{GT}}^v \|_2$ | 예측된 focal length와 GT 간의 L2 distance |
-| $\mathcal{L}_{\text{pose}}$ | $\frac{1}{N(N-1)}\sum_{i\ne j}(\mathcal{L}_R(i,j) + \lambda_t\mathcal{L}_t(i,j))$ | 입력 이미지 쌍에 대한 상대적(relative) pose 예측 학습 (순서 불변성 유지) |
-| $\mathcal{L}_{\text{opacity}}$ | $\frac{1}{M}\sum_{i=1}^M |o_i|$ | 투명도 기반 희소성(sparsity) 정규화로 불필요한 Gaussian 억제 |
+| `$\mathcal{L}_{\text{image}}$` | `$\text{MSE} + \text{LPIPS}$` | 목표 뷰에서의 렌더링 품질을 최적화 (Gaussian 학습) |
+| `$\mathcal{L}_{\text{intrin}}$` | `$\Vert \hat{k}^v - k_{\text{GT}}^v \Vert_2$` | 예측된 focal length와 GT 간의 L2 distance |
+| `$\mathcal{L}_{\text{pose}}$` | `$\frac{1}{N(N-1)}\sum_{i\ne j}(\mathcal{L}_R(i,j) + \lambda_t\mathcal{L}_t(i,j))$` | 입력 이미지 쌍에 대한 상대적(relative) pose 예측 학습 (순서 불변성 유지) |
+| `$\mathcal{L}_{\text{opacity}}$` | `$\frac{1}{M}\sum_{i=1}^M \vert o_i \vert$` | 투명도 기반 희소성(sparsity) 정규화로 불필요한 Gaussian 억제 |
 
-- 학습 스케줄 / optimizer: AdamW 옵티마이저 사용, Backbone LR $2\times10^{-5}$, 나머지 $2\times10^{-4}$.
-- 하이퍼파라미터 세팅: $\lambda_{\text{intrin}} = 0.5$, $\lambda_{\text{pose}} = 0.1$, $\lambda_{\text{opacity}} = 0.01$. Gaussian pruning 임계값 $o_i < 0.005$.
+- 학습 스케줄 / optimizer: AdamW 옵티마이저 사용, Backbone LR `$2\times10^{-5}$`, 나머지 `$2\times10^{-4}$`.
+- 하이퍼파라미터 세팅: `$\lambda_{\text{intrin}} = 0.5$`, `$\lambda_{\text{pose}} = 0.1$`, `$\lambda_{\text{opacity}} = 0.01$`. Gaussian pruning 임계값 `$o_i < 0.005$`.
 
 ---
 

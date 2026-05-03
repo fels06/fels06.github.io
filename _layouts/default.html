@@ -17,15 +17,85 @@
     
     <!-- MathJax for LaTeX Support -->
     <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        tags: 'ams'
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      },
+      startup: {
+        pageReady: () => {
+          const article = document.querySelector(
+            '.tt_article_useless_p_margin, .article_view, .entry-content, .post-content'
+          );
+
+          if (article) {
+            /**
+             * 수식 내부 HTML을 깨끗한 LaTeX 문자열로 복원합니다.
+             * 티스토리 에디터가 망가뜨리는 패턴을 순서대로 처리합니다.
+             */
+            function cleanMath(raw) {
+              return raw
+                // ① <sub>x</sub> → _x  /  <sup>x</sup> → ^x  (에디터 자동 변환 복원)
+                .replace(/<sub>([\s\S]*?)<\/sub>/gi, '_$1')
+                .replace(/<sup>([\s\S]*?)<\/sup>/gi, '^$1')
+                // ② 줄바꿈 역할의 태그 → \n
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/<\/?p[^>]*>/gi, '\n')
+                // ③ 나머지 HTML 태그 전부 제거
+                .replace(/<[^>]+>/g, '')
+                // ④ HTML 엔티티 디코딩
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                // ⑤ 대괄호 복원 (핵심!)
+                .replace(/&#91;/g, '[')
+                .replace(/&#93;/g, ']')
+                .replace(/&lbrack;/g, '[')
+                .replace(/&rbrack;/g, ']')
+                // ⑥ 기타 자주 깨지는 기호
+                .replace(/&nbsp;/g, ' ')
+                .replace(/&Hat;/g, '^')
+                .replace(/&lowbar;/g, '_')
+                .replace(/&hellip;/g, '...')
+                .trim();
             }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+            let html = article.innerHTML;
+
+            // ── Display math: $$ ... $$ ──────────────────────────────
+            html = html.replace(/\$\$([\s\S]*?)\$\$/g, (_, content) => {
+              const latex = cleanMath(content);
+              return (
+                '<div style="overflow-x:auto;text-align:center;margin:1.2em 0;">$$' +
+                latex +
+                '$$</div>'
+              );
+            });
+
+            // ── Inline math: $ ... $  ($$ 제외, 줄바꿈 불허) ─────────
+            html = html.replace(/(?<!\$)\$([^$\n]{1,400}?)\$(?!\$)/g, (_, content) => {
+              const latex = cleanMath(content);
+              return '$' + latex + '$';
+            });
+
+            article.innerHTML = html;
+          }
+
+          return MathJax.startup.defaultPageReady();
+        }
+      }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+  </script>
 </head>
 <body>
     <header>
@@ -44,9 +114,27 @@
             </nav>
         </div>
     </header>
-
-    {{ content }}
-
+    <div class="page-layout container">
+        <aside class="sidebar">
+            <div class="sidebar-inner">
+                <h3>Categories</h3>
+                <ul class="category-list">
+                    {% for category in site.categories %}
+                    <li>
+                        <a href="{{ '/category/' | append: category[0] | relative_url }}">
+                            <span class="cat-name">{{ category[0] }}</span>
+                            <span class="cat-count">{{ category[1].size }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </aside>
+        
+        <div class="main-content">
+            {{ content }}
+        </div>
+    </div>
     <footer>
         <p>&copy; {{ site.time | date: "%Y" }} {{ site.title }}. All rights reserved.</p>
     </footer>
@@ -74,6 +162,15 @@
             document.documentElement.dataset.theme = newTheme;
             localStorage.setItem('theme', newTheme);
             updateIcon();
+        });
+
+        // 스크롤 시 헤더 축소 효과
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                document.body.classList.add('scrolled');
+            } else {
+                document.body.classList.remove('scrolled');
+            }
         });
     </script>
 </body>
