@@ -13,7 +13,6 @@
             <nav>
                 <ul>
                     <li><a href="{{ '/' | relative_url }}">Home</a></li>
-                    <li><button id="theme-toggle" aria-label="다크모드 전환">🌙</button></li>
                 </ul>
             </nav>
         </div>
@@ -24,26 +23,5 @@
     <footer>
         <p>&copy; {{ site.time | date: "%Y" }} {{ site.title }}. Built for GitHub Pages.</p>
     </footer>
-
-    <script>
-        const toggleBtn = document.getElementById('theme-toggle');
-        // 이전 테마 설정 불러오기
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.body.dataset.theme = savedTheme;
-            toggleBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.dataset.theme = 'dark';
-            toggleBtn.textContent = '☀️';
-        }
-
-        toggleBtn.addEventListener('click', () => {
-            const currentTheme = document.body.dataset.theme;
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.dataset.theme = newTheme;
-            toggleBtn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-            localStorage.setItem('theme', newTheme);
-        });
-    </script>
 </body>
 </html>

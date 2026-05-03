@@ -32,6 +32,13 @@ body {
     color: var(--text-color);
     background-color: var(--bg-color);
     transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -68,19 +75,19 @@ nav a:hover { color: var(--accent-color); }
 }
 
 /* 메인 페이지 요소 */
-.intro { margin-bottom: 50px; }
-.intro h2 { font-size: 2rem; margin-bottom: 10px; }
-.intro p { color: var(--text-muted); font-size: 1.1rem; }
+.intro { margin-bottom: 50px; display: flex; align-items: baseline; gap: 20px; }
+.intro h2 { font-size: 2rem; margin-bottom: 0; }
+.intro p { color: var(--text-muted); font-size: 1.1rem; margin: 0; }
 
 .post-item {
-    padding: 25px 0;
+    padding: 40px 0;
     border-bottom: 1px solid var(--border-color);
 }
 
 .post-item:hover {
     background-color: var(--card-hover);
     border-radius: 8px;
-    padding: 25px;
+    padding: 40px 25px;
     margin: 0 -25px; /* 패딩 보정 */
 }
 
