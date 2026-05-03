@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "YoNoSplat"
-date: 2026-05-03 12:00:00 +0900
+date: 2026-05-03 11:00:00 +0900
 categories: [Paper Review]
 tags: [3DGS, 3D Gaussian Splatting]
 ---
