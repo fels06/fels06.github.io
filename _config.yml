@@ -1,0 +1,12 @@
+# 블로그 기본 정보
+title: Paper Review
+description: 3D Gaussian Splatting을 공부하고 있는 학생입니다.
+author: fels06
+
+# 테마 설정
+# 주의: antigravity 테마의 정확한 GitHub 경로(제작자/저장소명)를 입력해야 합니다.
+# 만약 기본 제공 gem 테마라면 `theme: antigravity` 로 작성합니다.
+remote_theme: [제작자의GitHub아이디]/antigravity 
+
+# 기타 설정
+url: "https://fels06.github.io"
