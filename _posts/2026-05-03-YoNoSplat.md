@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "YoNoSplat"
+title: "[Paper Review]YoNoSplat: You Only Need One Model for Feedforward 3D Gaussian Splatting"
 date: 2026-05-03 11:00:00 +0900
 categories: [Paper Review]
 tags: [3DGS, 3D Gaussian Splatting]
 ---
 
-# YoNoSplat [Paper](https://arxiv.org/pdf/2511.07321) [Code](https://github.com/cvg/YoNoSplat)
+## YoNoSplat [Paper](https://arxiv.org/pdf/2511.07321) [Code](https://github.com/cvg/YoNoSplat)
 
 ![YoNoSplat Teaser](/assets/images/yonosplat-teaser.png)
 

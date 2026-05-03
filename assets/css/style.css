@@ -240,6 +240,32 @@ nav a:hover { color: var(--text-primary); }
 
 .post-content strong { color: var(--text-primary); font-weight: 700; }
 
+.post-content a:not(:has(img)) {
+    color: var(--accent-color);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+.post-content a:not(:has(img)):hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+.post-content a:not(:has(img))::before {
+    content: "[";
+    margin-right: 2px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    text-decoration: none;
+    display: inline-block;
+}
+.post-content a:not(:has(img))::after {
+    content: "]";
+    margin-left: 2px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    text-decoration: none;
+    display: inline-block;
+}
+
 .post-content blockquote {
     margin: 30px 0;
     padding: 20px 24px;
