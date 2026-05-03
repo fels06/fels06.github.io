@@ -282,6 +282,7 @@ body.scrolled .theme-toggle svg {
     border-bottom: 1px solid var(--card-border);
     margin-bottom: 50px;
     animation: fadeUp 0.6s ease-out forwards;
+    transition: padding 0.3s ease, margin 0.3s ease;
 }
 .post-header .post-title {
     font-size: 2.8rem;
@@ -289,6 +290,17 @@ body.scrolled .theme-toggle svg {
     letter-spacing: -1px;
     line-height: 1.2;
     margin: 20px 0;
+    transition: font-size 0.3s ease, margin 0.3s ease;
+}
+
+/* Scrolled State for Post Header */
+body.scrolled .post-header {
+    padding: 30px 0 20px;
+    margin-bottom: 30px;
+}
+body.scrolled .post-header .post-title {
+    font-size: 2.2rem;
+    margin: 15px 0;
 }
 .post-header .post-meta {
     justify-content: center;
