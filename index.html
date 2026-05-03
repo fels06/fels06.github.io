@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dev & Research Blog</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 네비게이션 바 -->
+    <header>
+        <div class="header-container">
+            <h1><a href="#">Tech & Paper Log</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Paper Reviews</a></li>
+                    <li><a href="#">Projects</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="container">
+        <!-- 소개 섹션 -->
+        <section class="intro">
+            <h2>안녕하세요! 👋</h2>
+            <p>인공지능, 데이터 사이언스, 그리고 흥미로운 개발 프로젝트를 다루는 개인 공간입니다. 새롭게 읽은 논문과 진행 중인 프로젝트의 기록을 남깁니다.</p>
+        </section>
+
+        <!-- 최근 게시물 섹션 -->
+        <section class="recent-posts">
+            <h3>최근 글</h3>
+            
+            <div class="post-grid">
+                <!-- 게시물 카드 1 -->
+                <article class="post-card">
+                    <span class="category paper">Paper Review</span>
+                    <h2><a href="#">Attention Is All You Need 리뷰</a></h2>
+                    <p class="date">2026년 5월 3일</p>
+                    <p class="summary">Transformer 아키텍처의 핵심 원리와 Self-Attention 메커니즘을 상세히 분석하고 코드로 구현해 봅니다.</p>
+                </article>
+
+                <!-- 게시물 카드 2 -->
+                <article class="post-card">
+                    <span class="category project">Project</span>
+                    <h2><a href="#">LLM을 활용한 개인화 추천 챗봇 개발기</a></h2>
+                    <p class="date">2026년 4월 28일</p>
+                    <p class="summary">LangChain과 오픈소스 LLM을 활용하여 문서 기반의 질의응답이 가능한 RAG 시스템을 구축한 프로젝트 회고입니다.</p>
+                </article>
+
+                <!-- 게시물 카드 3 -->
+                <article class="post-card">
+                    <span class="category paper">Paper Review</span>
+                    <h2><a href="#">초거대 언어 모델의 발전 동향 요약</a></h2>
+                    <p class="date">2026년 4월 20일</p>
+                    <p class="summary">최근 발표된 주요 LLM 연구 논문들을 바탕으로, 파라미터 효율적 미세조정(PEFT) 기법의 트렌드를 짚어봅니다.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- 푸터 -->
+    <footer>
+        <p>&copy; 2026 Tech & Paper Log. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#">GitHub</a> | <a href="#">LinkedIn</a> | <a href="#">Email</a>
+        </div>
+    </footer>
+
+</body>
+</html>
