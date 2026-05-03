@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention Is All You Need 리뷰 - Tech & Paper Log</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1><a href="index.html">Tech & Paper Log</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><button id="theme-toggle" aria-label="다크모드 전환">🌙</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container post-container">
+        <!-- 게시글 헤더 -->
+        <header class="post-header">
+            <div class="post-meta">
+                <span class="category">Paper Review</span>
+                <time>2026. 05. 03</time>
+            </div>
+            <h1 class="post-title">Attention Is All You Need 논문 핵심 요약</h1>
+            <div class="tags">
+                <span>#NLP</span><span>#Transformer</span>
+            </div>
+        </header>
+
+        <!-- 게시글 본문 -->
+        <article class="post-content">
+            <p>이 글에서는 구글 브레인이 2017년에 발표한 기념비적인 논문, <em>Attention Is All You Need</em>의 핵심 아이디어를 정리합니다.</p>
+            
+            <h2>1. Introduction</h2>
+            <p>기존의 RNN이나 CNN 구조를 완전히 배제하고, 오직 <strong>Attention 메커니즘</strong>만을 사용하여 병렬 처리를 극대화한 모델입니다.</p>
+
+            <blockquote>
+                "We propose the Transformer, a model architecture eschewing recurrence and instead relying entirely on an attention mechanism to draw global dependencies between input and output."
+            </blockquote>
+
+            <h2>2. Model Architecture</h2>
+            <p>인코더와 디코더 구조를 가지며, Multi-Head Attention이 핵심 역할을 수행합니다. 코드로 구현하면 다음과 같은 형태가 됩니다.</p>
+
+            <pre><code>import torch.nn as nn
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, num_heads):
+        super().__init__()
+        # 초기화 코드 생략...
+</code></pre>
+
+            <p>앞으로 제 개인 프로젝트에서도 이 구조를 적극 활용해 볼 계획입니다.</p>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Tech & Paper Log. Built for GitHub Pages.</p>
+    </footer>
+
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        toggleBtn.addEventListener('click', () => {
+            document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+            toggleBtn.textContent = document.body.dataset.theme === 'dark' ? '☀️' : '🌙';
+        });
+    </script>
+</body>
+</html>
