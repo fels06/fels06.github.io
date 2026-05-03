@@ -2,16 +2,16 @@
 layout: default
 ---
 
-<main class="container post-container">
+<main class="container">
     <header class="post-header">
         <div class="post-meta">
             <span class="category">{{ page.categories | first | default: "Post" }}</span>
-            <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y. %m. %d" }}</time>
+            <span class="date">{{ page.date | date: "%Y. %m. %d" }}</span>
         </div>
         <h1 class="post-title">{{ page.title }}</h1>
         <div class="tags">
             {% for tag in page.tags %}
-            <span>#{{ tag }}</span>
+            <span class="tag">#{{ tag }}</span>
             {% endfor %}
         </div>
     </header>
