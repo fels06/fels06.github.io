@@ -1,3 +1,4 @@
+
 ---
 layout: post
 title: "[Paper Review] VGGT-Ω: Scaling Feed-Forward 3D and 4D Reconstruction"

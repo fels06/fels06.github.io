@@ -20,3 +20,14 @@ layout: default
         {{ content }}
     </article>
 </main>
+
+<script>
+    window.addEventListener('scroll', () => {
+        const postHeader = document.querySelector('.post-header');
+        if (window.scrollY > 20) {
+            postHeader.classList.add('scrolled');
+        } else {
+            postHeader.classList.remove('scrolled');
+        }
+    });
+</script>

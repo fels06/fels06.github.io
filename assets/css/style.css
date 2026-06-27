@@ -267,11 +267,27 @@ nav a:hover { color: var(--text-primary); }
 
 /* Post Detail Page */
 .post-header {
-    padding: 30px 0 20px;
+    position: sticky;
+    top: 58px; /* Offset for the global header */
+    z-index: 90;
+    background-color: var(--bg-color);
+    padding: 30px 20px 20px 20px;
+    margin: 0 -20px 30px -20px;
     text-align: left;
     border-bottom: 1px solid var(--card-border);
-    margin-bottom: 30px;
+    transition: background-color 0.3s ease;
     animation: fadeUp 0.6s ease-out forwards;
+}
+
+.post-header.scrolled {
+    background-color: var(--header-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.post-header.scrolled .post-meta,
+.post-header.scrolled .tags {
+    display: none;
 }
 .post-header .post-title {
     font-size: 2.0rem;
