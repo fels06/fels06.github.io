@@ -379,6 +379,20 @@ body.scrolled .theme-toggle svg {
     border-top: 1px solid var(--card-border);
 }
 
+.math-box {
+    border: 1px solid var(--card-border);
+    background-color: var(--code-bg);
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    text-align: center;
+    overflow-x: auto;
+}
+
+.math-box * {
+    margin: 0 !important;
+}
+
 /* Table Styles */
 .post-content table {
     width: 100%;

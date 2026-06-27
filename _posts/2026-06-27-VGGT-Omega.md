@@ -77,9 +77,9 @@ VGGT-Ω는 DINOv3 기반 비전 트랜스포머로 입력 이미지를 토큰화
 
 **Input:**
 
-```
-I_i ∈ ℝ^{3 × H × W} (i = 1, ..., N)
-```
+<div class="math-box">
+$$ I_i \in \mathbb{R}^{3 \times H \times W} \quad (i = 1, \dots, N) $$
+</div>
 
 **Process:**
 
@@ -94,9 +94,9 @@ $$
 
 **Output:**
 
-```
-z = (z_1, ..., z_N) ∈ ℝ^{N × (H'W' + 17) × C}
-```
+<div class="math-box">
+$$ z = (z_1, \dots, z_N) \in \mathbb{R}^{N \times (H'W' + 17) \times C} $$
+</div>
 
 ---
 
@@ -104,9 +104,9 @@ z = (z_1, ..., z_N) ∈ ℝ^{N × (H'W' + 17) × C}
 
 **Input:**
 
-```
-z ∈ ℝ^{N × (H'W' + 17) × C}
-```
+<div class="math-box">
+$$ z \in \mathbb{R}^{N \times (H'W' + 17) \times C} $$
+</div>
 
 **Process:**
 
@@ -121,9 +121,9 @@ $$
 
 **Output:**
 
-```
-z' = (z_1', ..., z_N') ∈ ℝ^{N × (H'W' + 17) × C}
-```
+<div class="math-box">
+$$ z' = (z_1', \dots, z_N') \in \mathbb{R}^{N \times (H'W' + 17) \times C} $$
+</div>
 
 ---
 
@@ -131,9 +131,9 @@ z' = (z_1', ..., z_N') ∈ ℝ^{N × (H'W' + 17) × C}
 
 **Input:**
 
-```
-z' = (z_1', ..., z_N') ∈ ℝ^{N × (H'W' + 17) × C}
-```
+<div class="math-box">
+$$ z' = (z_1', \dots, z_N') \in \mathbb{R}^{N \times (H'W' + 17) \times C} $$
+</div>
 
 **Process:**
 
@@ -148,9 +148,9 @@ $$
 
 **Output:**
 
-```
-Depth maps {D_i}_{i=1}^N, Cameras {g_i}_{i=1}^N
-```
+<div class="math-box">
+$$ \text{Depth maps } \{D_i\}_{i=1}^N, \quad \text{Cameras } \{g_i\}_{i=1}^N $$
+</div>
 
 ---
 
