@@ -15,6 +15,14 @@ Jianyuan Wang, Johannes Schönberger, Minghao Chen, Shangzhan Zhang, Nikita Kara
 
 ---
 
+## 💡 Brief Summary
+
+### "VGGT-Ω : 모델이랑 데이터 키워서 파워로 밀어붙이면 3D 복원도 대충 다 잘 나오는 거 아님?"
+
+이 논문은 기존 복원 Transformer 모델의 아키텍처를 효율적으로 개선하고 데이터와 모델 크기를 대폭 확장(Scaling)하여 성능을 끌어올린 기여를, 대규모 스케일업을 하면 당연히 성능이 잘 나온다는 자명한 사실로 치환하였다.
+
+---
+
 ## 📌 Basic Information
 
 | 항목                             | 내용                                                                                                                                                                                                                              |

@@ -373,6 +373,12 @@ body.scrolled .theme-toggle svg {
     border: 1px solid var(--card-border);
 }
 
+.post-content hr {
+    margin: 60px 0;
+    border: 0;
+    border-top: 1px solid var(--card-border);
+}
+
 /* Table Styles */
 .post-content table {
     width: 100%;
