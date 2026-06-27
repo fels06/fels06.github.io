@@ -103,7 +103,6 @@
             <a href="{{ '/' | relative_url }}" class="logo">{{ site.title }}</a>
             <nav>
                 <ul>
-                    <li><a href="{{ '/' | relative_url }}">Home</a></li>
                     <li>
                         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
                             <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -162,15 +161,6 @@
             document.documentElement.dataset.theme = newTheme;
             localStorage.setItem('theme', newTheme);
             updateIcon();
-        });
-
-        // 스크롤 시 헤더 축소 효과
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                document.body.classList.add('scrolled');
-            } else {
-                document.body.classList.remove('scrolled');
-            }
         });
     </script>
 </body>

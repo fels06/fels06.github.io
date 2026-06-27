@@ -93,17 +93,7 @@ nav ul { display: flex; align-items: center; gap: 24px; list-style: none; }
 nav a { font-weight: 500; color: var(--text-secondary); font-size: 0.95rem; transition: font-size 0.3s ease; }
 nav a:hover { color: var(--text-primary); }
 
-/* Scrolled State for Header */
-body.scrolled .header-container {
-    padding: 5px 40px;
-}
-body.scrolled .theme-toggle {
-    padding: 4px;
-}
-body.scrolled .theme-toggle svg {
-    width: 14px;
-    height: 14px;
-}
+
 
 .theme-toggle {
     background: none; border: none; cursor: pointer; padding: 8px;
