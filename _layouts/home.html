@@ -10,7 +10,7 @@ layout: default
 
     <section class="post-list">
         {% for post in site.posts %}
-        <a href="{{ post.url | relative_url }}" class="post-card">
+        <a href="{{ post.url | relative_url }}" class="post-card" data-category="{{ post.categories | first }}">
             <div class="post-meta">
                 <span class="category">{{ post.categories | first | default: "Post" }}</span>
                 <time class="date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y. %m. %d" }}</time>
@@ -26,3 +26,27 @@ layout: default
         {% endfor %}
     </section>
 </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    
+    if (category) {
+        const posts = document.querySelectorAll('.post-card');
+        posts.forEach(post => {
+            if (post.getAttribute('data-category') === category) {
+                post.style.display = 'block';
+            } else {
+                post.style.display = 'none';
+            }
+        });
+        
+        // Update hero text to show current category filter
+        const hero = document.querySelector('.hero p');
+        if (hero) {
+            hero.innerHTML = `Showing posts in category: <strong>${category}</strong> <a href="{{ '/' | relative_url }}" style="font-size: 0.8em; margin-left: 10px;">(Clear filter)</a>`;
+        }
+    }
+});
+</script>

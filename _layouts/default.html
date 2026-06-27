@@ -121,7 +121,7 @@
                 <ul class="category-list">
                     {% for category in site.categories %}
                     <li>
-                        <a href="{{ '/category/' | append: category[0] | relative_url }}">
+                        <a href="{{ '/' | relative_url }}?category={{ category[0] | url_encode }}">
                             <span class="cat-name">{{ category[0] }}</span>
                             <span class="cat-count">{{ category[1].size }}</span>
                         </a>
