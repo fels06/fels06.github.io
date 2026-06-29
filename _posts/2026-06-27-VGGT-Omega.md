@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title: "[Paper Review] VGGT-Ω: Scaling Feed-Forward 3D and 4D Reconstruction"
@@ -6,6 +5,8 @@ date: 2026-06-27 22:55:00 +0900
 categories: [Paper Review]
 tags: [3D Reconstruction, 4D Reconstruction, Foundation Model]
 ---
+![VGGT-Ω](/assets/images/vggt-omega.png)
+
 ## VGGT-Ω [Paper](https://arxiv.org/abs/2605.15195) [Project Page](http://vggt-omega.github.io/)
 
 Jianyuan Wang, Johannes Schönberger, Minghao Chen, Shangzhan Zhang, Nikita Karaev, Patrick Labatut, Andrea Vedaldi, Piotr Bojanowski, Christian Rupprecht, David Novotny
