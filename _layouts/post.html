@@ -21,3 +21,26 @@ layout: default
     </article>
 </main>
 
+<script>
+    window.addEventListener('scroll', () => {
+        const logo = document.querySelector('.logo');
+        if (!logo) return;
+        
+        const siteTitle = "{{ site.title }}";
+        const postTitle = "{{ page.title | escape }}";
+        
+        // When scrolled past the post-header, change the logo text to the post title
+        if (window.scrollY > 150) {
+            logo.textContent = postTitle;
+            logo.style.fontSize = "1.05rem"; // slightly smaller to fit long titles
+            logo.style.maxWidth = "70vw";
+            logo.style.whiteSpace = "nowrap";
+            logo.style.overflow = "hidden";
+            logo.style.textOverflow = "ellipsis";
+        } else {
+            logo.textContent = siteTitle;
+            logo.style.fontSize = ""; // reset to original
+            logo.style.maxWidth = "";
+        }
+    });
+</script>
