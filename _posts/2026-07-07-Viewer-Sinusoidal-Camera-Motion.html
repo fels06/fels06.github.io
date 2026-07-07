@@ -1,0 +1,257 @@
+---
+title: "[Viewer] Sinusoidal Camera Motion"
+date: 2026-07-07 19:04:10 +0900
+categories: [Viewer]
+---
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Sinusoidal Camera Motion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #111; color: white; font-family: sans-serif; }
+        canvas { display: block; width: 100%; height: 100vh; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; padding: 1.5rem; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+        .panel { background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.15); pointer-events: auto; }
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-family: monospace; font-size: 1rem; }
+        .data-label { color: #a1a1aa; }
+        .data-value { color: #10b981; font-weight: bold; }
+        button { transition: all 0.2s; }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        <div class="panel w-80">
+            <h1 class="text-xl font-bold mb-4 border-b border-gray-700 pb-2">3D Camera Motion</h1>
+            
+            <div class="data-row">
+                <span class="data-label">모션 주기:</span>
+                <span class="data-value text-blue-400">60 프레임 (2초)</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">X축 진폭 (좌우):</span>
+                <span class="data-value text-yellow-400">16 (비율: 1.6m)</span>
+            </div>
+            <div class="data-row border-b border-gray-700 pb-4 mb-4">
+                <span class="data-label">Y축 진폭 (상하):</span>
+                <span class="data-value text-yellow-400">8 (비율: 0.8m)</span>
+            </div>
+            
+            <div class="flex flex-col space-y-3 mb-4 border-b border-gray-700 pb-4">
+                <span class="text-sm text-gray-400 font-bold mb-1">시점 변경 (View Mode)</span>
+                <button id="btn-fp" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded text-sm">
+                    🎥 1인칭 시점 (First-Person)
+                </button>
+                <button id="btn-tp" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded text-sm">
+                    👁️ 3인칭 관찰자 시점 (Third-Person)
+                </button>
+            </div>
+
+            <div class="flex flex-col space-y-2">
+                <span class="text-sm text-gray-400 font-bold mb-1">모션 궤적 형태 (Motion Shape)</span>
+                <label class="flex items-center space-x-2 text-sm text-gray-300 cursor-pointer">
+                    <input type="radio" name="motionType" value="oval" checked class="form-radio text-green-500">
+                    <span>타원형 (Idle/호버링 형태)</span>
+                </label>
+                <label class="flex items-center space-x-2 text-sm text-gray-300 cursor-pointer">
+                    <input type="radio" name="motionType" value="figure8" class="form-radio text-green-500">
+                    <span>8자형 (걷기/뛰기 형태)</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="text-center bg-black bg-opacity-50 px-4 py-2 rounded-full mx-auto backdrop-blur-md border border-gray-700">
+            <p id="view-desc" class="text-sm text-green-400">현재: 1인칭 시점 (카메라가 직접 흔들리는 것을 체험합니다)</p>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Three.js 초기 설정 ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x111111, 0.03); // 깊이감을 위한 안개
+        scene.background = new THREE.Color(0x111111);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // --- 2. 카메라 설정 ---
+        // 1인칭 카메라 (움직일 대상)
+        const fpCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        // 3인칭 관찰자 카메라 (고정됨)
+        const tpCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        tpCamera.position.set(-6, 4, 8);
+        tpCamera.lookAt(0, 2, -5);
+
+        let activeCamera = fpCamera; // 현재 렌더링할 카메라
+
+        // --- 3. 3D 씬 (환경) 구성 ---
+        // 바닥 그리드
+        const gridHelper = new THREE.GridHelper(100, 100, 0x444444, 0x222222);
+        scene.add(gridHelper);
+
+        // 복도/기둥들 (원근감과 움직임을 잘 느끼게 하기 위함)
+        const pillarGeo = new THREE.BoxGeometry(1, 10, 1);
+        const pillarMat = new THREE.MeshStandardMaterial({ color: 0x555555, roughness: 0.7 });
+        for (let i = 0; i < 40; i++) {
+            const mesh = new THREE.Mesh(pillarGeo, pillarMat);
+            const zPos = -(i * 4); // 앞으로 쭉 늘어섬
+            const xPos = i % 2 === 0 ? -4 : 4; // 좌우 지그재그
+            mesh.position.set(xPos, 5, zPos);
+            scene.add(mesh);
+        }
+
+        // 조명
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(10, 20, 10);
+        scene.add(dirLight);
+
+        // --- 4. 시각화 보조 도구 (3인칭용) ---
+        // 카메라를 나타내는 초록색 박스 모델
+        const camBoxGeo = new THREE.BoxGeometry(0.8, 0.5, 1.2);
+        const camBoxMat = new THREE.MeshPhongMaterial({ color: 0x10b981, emissive: 0x054f36 });
+        const camMesh = new THREE.Mesh(camBoxGeo, camBoxMat);
+        scene.add(camMesh);
+        
+        // 렌즈 앞부분 표시
+        const lensGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.3, 16);
+        const lensMat = new THREE.MeshPhongMaterial({ color: 0x222222 });
+        const lensMesh = new THREE.Mesh(lensGeo, lensMat);
+        lensMesh.rotation.x = Math.PI / 2;
+        lensMesh.position.z = -0.7;
+        camMesh.add(lensMesh); // 카메라 박스에 렌즈 부착
+
+        // 궤적(Trail)을 그리기 위한 라인 설정
+        const maxTrailPoints = 100;
+        const trailPositions = new Float32Array(maxTrailPoints * 3);
+        const trailGeo = new THREE.BufferGeometry();
+        trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+        const trailMat = new THREE.LineBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.6 });
+        const trailLine = new THREE.Line(trailGeo, trailMat);
+        scene.add(trailLine);
+
+        // --- 5. 변수 및 파라미터 (조건에 맞춤) ---
+        const BASE_HEIGHT = 2.0; // 기본 카메라 높이
+        const AMP_X = 1.6; // 16px에 대응하는 X축 진폭 (비율)
+        const AMP_Y = 0.8; // 8px에 대응하는 Y축 진폭 (비율)
+        const PERIOD_SEC = 2.0; // 60프레임 (30fps 기준 = 2초)
+
+        // UI 이벤트 처리
+        const btnFp = document.getElementById('btn-fp');
+        const btnTp = document.getElementById('btn-tp');
+        const viewDesc = document.getElementById('view-desc');
+        const motionRadios = document.getElementsByName('motionType');
+
+        btnFp.addEventListener('click', () => {
+            activeCamera = fpCamera;
+            camMesh.visible = false; // 1인칭일 땐 카메라 모델 숨김
+            trailLine.visible = false;
+            btnFp.classList.replace('bg-gray-700', 'bg-blue-600');
+            btnTp.classList.replace('bg-blue-600', 'bg-gray-700');
+            viewDesc.innerText = "현재: 1인칭 시점 (카메라가 직접 흔들리는 것을 체험합니다)";
+        });
+
+        btnTp.addEventListener('click', () => {
+            activeCamera = tpCamera;
+            camMesh.visible = true; // 3인칭일 땐 카메라 모델 보임
+            trailLine.visible = true;
+            btnTp.classList.replace('bg-gray-700', 'bg-blue-600');
+            btnFp.classList.replace('bg-blue-600', 'bg-gray-700');
+            viewDesc.innerText = "현재: 3인칭 관찰자 시점 (허공에 그려지는 모션 궤적을 확인합니다)";
+        });
+
+        // 기본 상태 트리거
+        btnFp.click();
+
+        // 궤적 업데이트 함수
+        let trailIndex = 0;
+        function updateTrail(position) {
+            const positions = trailLine.geometry.attributes.position.array;
+            
+            // 모든 점을 한 칸씩 뒤로 밀기
+            for (let i = maxTrailPoints - 1; i > 0; i--) {
+                positions[i * 3] = positions[(i - 1) * 3];
+                positions[i * 3 + 1] = positions[(i - 1) * 3 + 1];
+                positions[i * 3 + 2] = positions[(i - 1) * 3 + 2];
+            }
+            // 새로운 점 추가
+            positions[0] = position.x;
+            positions[1] = position.y;
+            positions[2] = position.z;
+            
+            trailLine.geometry.attributes.position.needsUpdate = true;
+        }
+
+        // --- 6. 애니메이션 루프 ---
+        function animate(time) {
+            requestAnimationFrame(animate);
+
+            // 경과 시간(초)
+            const elapsedSec = time / 1000;
+            
+            // 주기(2초)에 따른 사이클 (0.0 ~ 1.0)
+            const cycle = (elapsedSec % PERIOD_SEC) / PERIOD_SEC;
+            // 각도로 변환 (0 ~ 2*PI)
+            const angle = cycle * Math.PI * 2;
+
+            // 라디오 버튼으로 선택된 모션 타입 확인
+            let isFigure8 = false;
+            for(let radio of motionRadios) {
+                if(radio.checked && radio.value === 'figure8') isFigure8 = true;
+            }
+
+            // 모션 계산 적용
+            const offsetX = AMP_X * Math.sin(angle);
+            
+            let offsetY;
+            if (isFigure8) {
+                // 8자형 궤적: Y축이 X축보다 2배 빠르게 진동 (걷는 모션)
+                offsetY = AMP_Y * Math.sin(angle * 2);
+            } else {
+                // 타원형 궤적: 위상차를 둔 사인/코사인 조합 (호버링/숨쉬기 모션)
+                offsetY = AMP_Y * Math.cos(angle);
+            }
+
+            // 1. 카메라 위치에 적용
+            fpCamera.position.set(offsetX, BASE_HEIGHT + offsetY, 0);
+            // 카메라는 항상 무한히 앞을 바라보게 고정 (이동만 적용)
+            fpCamera.rotation.set(0, 0, 0); 
+
+            // 2. 3인칭용 카메라 모델 위치 동기화
+            camMesh.position.copy(fpCamera.position);
+
+            // 3인칭 모드일 경우 궤적 그리기 업데이트
+            if (activeCamera === tpCamera) {
+                updateTrail(camMesh.position);
+            }
+
+            // 렌더링
+            renderer.render(scene, activeCamera);
+        }
+
+        // 반응형 리사이즈
+        window.addEventListener('resize', () => {
+            fpCamera.aspect = window.innerWidth / window.innerHeight;
+            fpCamera.updateProjectionMatrix();
+            tpCamera.aspect = window.innerWidth / window.innerHeight;
+            tpCamera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 시작
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
